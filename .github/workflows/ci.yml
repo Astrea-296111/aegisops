@@ -1,0 +1,82 @@
+name: verify
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  portable:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install --no-deps -e .
+      - run: python -m ruff check .
+      - run: python -m mypy src
+      - run: python -m pytest -q
+      - run: python -m aegisops init
+      - run: python -m alembic check
+      - run: python -m aegisops demo-replay
+      - run: python -m aegisops demo-crash-recovery
+      - run: python -m aegisops eval-smoke
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evidence-${{ matrix.os }}
+          path: artifacts/
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: aegis_test
+          POSTGRES_USER: aegis
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U aegis -d aegis_test"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      TEST_POSTGRES_URL: postgresql+asyncpg://aegis:ci-only-password@127.0.0.1:5432/aegis_test
+      AEGIS_DATABASE_URL: postgresql+asyncpg://aegis:ci-only-password@127.0.0.1:5432/aegis_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install --no-deps -e .
+      - run: python -m aegisops migrate
+      - run: python -m alembic check
+      - run: python -m pytest -q tests/test_postgres.py
+      - run: python -m aegisops demo-crash-recovery
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install --no-deps -e .
+      - run: python -m aegisops init
+      - run: python scripts/configure_docker.py --live
+      - run: docker compose --profile live config --quiet
+      - run: docker compose --profile live up -d --build --wait
+      - run: python scripts/live_demo.py
+      - if: always()
+        run: docker compose --profile live logs > live-stack.log
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-stack
+          path: |
+            live-stack.log
+            artifacts/local/live-report.json
+      - if: always()
+        run: docker compose --profile live down -v
+

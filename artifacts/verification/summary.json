@@ -1,0 +1,20 @@
+{
+  "environment": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "pytest": {
+    "passed": 52,
+    "skipped": 1,
+    "failures": 0
+  },
+  "ruff": "PASSED",
+  "mypy": "PASSED (28 source files)",
+  "alembic_check": "PASSED",
+  "wheel_build": "PASSED",
+  "fresh_install_and_separate_processes": "PASSED",
+  "subprocess_crash_recovery": "PASSED",
+  "windows_cp312_x64_wheels": 55,
+  "windows_runtime": "NOT_MEASURED",
+  "postgres_runtime": "NOT_MEASURED",
+  "docker_live_stack": "NOT_MEASURED",
+  "real_llm": "NOT_MEASURED"
+}

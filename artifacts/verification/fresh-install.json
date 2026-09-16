@@ -1,0 +1,22 @@
+{
+  "init": {
+    "returncode": 0,
+    "stdout": "Initialized. API credentials are in .env; do not commit or share that file.\n"
+  },
+  "doctor": {
+    "returncode": 0,
+    "stdout": "{\n  \"python\": \"3.12.14\",\n  \"database\": \"sqlite+aiosqlite\",\n  \"source\": \"replay\",\n  \"provider\": \"fake\",\n  \"scenarios\": 10,\n  \"credentials_configured\": true\n}\n"
+  },
+  "demo-replay": {
+    "returncode": 0,
+    "stdout": "{\n  \"run_id\": \"38e54df4d9d34692b5c7376bb31563f3\",\n  \"state\": \"COMPLETED\",\n  \"root_cause\": {\n    \"cause\": \"downstream_timeout\",\n    \"affected_service\": \"inventory-service\",\n    \"confidence\": 0.85,\n    \"evidence_ids\": [\n      \"8ff9fc3a6599476c97b45dfe0fb9e985\",\n      \"a0892ceaaa794e128a02fef814c80da8\",\n      \"d2b3d89ccc534de99830fa83a9ddd6cb\",\n      \"e299511a74f34a19a88260d98c261eb3\"\n    ],\n    \"reasoning_summary\": \"Correlate observed errors, latency and deployment metadata; synthetic rule-based diagnosis.\",\n    \"falsification_test\": \"Query the dependency directly; a healthy dependency would contradict this attribution.\"\n  },\n  \"output\": \"artifacts/local/38e54df4d9d34692b5c7376bb31563f3\"\n}\n"
+  },
+  "demo-crash-recovery": {
+    "returncode": 0,
+    "stdout": "{\n  \"run_id\": \"e0ce8c95ca3e4b4cadf49ffccd03941c\",\n  \"child_exit_code\": 17,\n  \"state\": \"COMPLETED\",\n  \"recovered_event\": true,\n  \"audit_chain_valid\": true\n}\n"
+  },
+  "separate_api_worker_processes": {
+    "status": "PASSED",
+    "root_cause": "downstream_timeout"
+  }
+}

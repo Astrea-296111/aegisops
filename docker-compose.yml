@@ -1,0 +1,101 @@
+name: aegisops
+x-env: &common-env
+  AEGIS_DATABASE_URL: postgresql+asyncpg://aegis:${AEGIS_DB_PASSWORD:?Run python scripts/configure_docker.py}@postgres:5432/aegis
+  AEGIS_VIEWER_TOKEN: ${AEGIS_VIEWER_TOKEN:?Run aegisops init}
+  AEGIS_OPERATOR_TOKEN: ${AEGIS_OPERATOR_TOKEN:?Run aegisops init}
+  AEGIS_DEMO_TOKEN: ${AEGIS_DEMO_TOKEN:?Run aegisops init}
+  AEGIS_SOURCE: ${AEGIS_DOCKER_SOURCE:-replay}
+  AEGIS_PROVIDER: ${AEGIS_PROVIDER:-fake}
+  AEGIS_LLM_API_KEY: ${AEGIS_LLM_API_KEY:-}
+  AEGIS_LLM_BASE_URL: ${AEGIS_LLM_BASE_URL:-https://api.openai.com/v1}
+  AEGIS_LLM_MODEL: ${AEGIS_LLM_MODEL:-configure-your-model}
+  AEGIS_DEMO_ONLY: "true"
+  AEGIS_PROMETHEUS_URL: http://prometheus:9090
+  AEGIS_LOKI_URL: http://loki:3100
+  AEGIS_TEMPO_URL: http://tempo:3200
+  AEGIS_DEMO_ORDER_URL: http://order:8011
+  AEGIS_DEMO_INVENTORY_URL: http://inventory:8012
+  AEGIS_OTLP_ENDPOINT: ${AEGIS_DOCKER_OTLP_ENDPOINT:-}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: aegis
+      POSTGRES_USER: aegis
+      POSTGRES_PASSWORD: ${AEGIS_DB_PASSWORD:?Run python scripts/configure_docker.py}
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aegis -d aegis"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  migrate:
+    build: .
+    environment: *common-env
+    command: ["aegisops", "migrate"]
+    depends_on:
+      postgres: {condition: service_healthy}
+  api:
+    restart: unless-stopped
+    build: .
+    environment: *common-env
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 15
+  worker:
+    restart: unless-stopped
+    build: .
+    environment: *common-env
+    command: ["aegisops", "worker"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  order:
+    profiles: ["live"]
+    build: .
+    environment: *common-env
+    command: ["aegisops", "demo-service", "--service", "order-service", "--port", "8011", "--host", "0.0.0.0"]
+    ports: ["127.0.0.1:8011:8011"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  inventory:
+    profiles: ["live"]
+    build: .
+    environment: *common-env
+    command: ["aegisops", "demo-service", "--service", "inventory-service", "--port", "8012", "--host", "0.0.0.0"]
+    ports: ["127.0.0.1:8012:8012"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  prometheus:
+    profiles: ["live"]
+    image: prom/prometheus:v3.5.0
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes: ["./demo/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["127.0.0.1:9090:9090"]
+  loki:
+    profiles: ["live"]
+    image: grafana/loki:3.5.0
+    command: ["-config.file=/etc/loki/config.yml"]
+    volumes: ["./demo/observability/loki.yml:/etc/loki/config.yml:ro"]
+    ports: ["127.0.0.1:3100:3100"]
+  tempo:
+    profiles: ["live"]
+    image: grafana/tempo:2.8.1
+    command: ["-config.file=/etc/tempo/config.yml"]
+    volumes: ["./demo/observability/tempo.yml:/etc/tempo/config.yml:ro"]
+    ports: ["127.0.0.1:3200:3200"]
+  otel-collector:
+    profiles: ["live"]
+    image: otel/opentelemetry-collector:0.130.1
+    command: ["--config=/etc/otel/config.yml"]
+    volumes: ["./demo/observability/collector.yml:/etc/otel/config.yml:ro"]
+    depends_on: [tempo]
+
+volumes:
+  postgres-data:
+

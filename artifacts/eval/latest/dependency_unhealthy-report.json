@@ -1,0 +1,305 @@
+{
+  "incident_id": "1a29642868894e3799054f161ce02114",
+  "run_id": "a484a3dd174a42778cfc289556a716be",
+  "summary": "downstream_500",
+  "top_root_cause": {
+    "cause": "downstream_500",
+    "affected_service": "inventory-service",
+    "confidence": 0.85,
+    "evidence_ids": [
+      "0b0791d3dc9a4d0c97583b10cf836d21",
+      "612a10e535c849bdac81ea32c01b1dd5",
+      "a3dc3f896f97402a87547680ee04c112",
+      "bb7269d2fbf044559a1f471a37e705eb"
+    ],
+    "reasoning_summary": "Correlate observed errors, latency and deployment metadata; synthetic rule-based diagnosis.",
+    "falsification_test": "Query the dependency directly; a healthy dependency would contradict this attribution."
+  },
+  "alternatives": [],
+  "evidence": [
+    {
+      "id": "0b0791d3dc9a4d0c97583b10cf836d21",
+      "source_type": "metrics",
+      "source_name": "replay:metrics",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_metrics",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.481996,
+        "window_start": 1789540703.481996
+      },
+      "observed_at": 1789541003.481996,
+      "summary": "[{\"error_rate\":0.6,\"latency_ms\":55,\"rate_limited\":0,\"service\":\"inventory-service\"}]",
+      "content_hash": "0763549a87eae4b622236221b3cf521b0e9947b4f07c9ba2943681bb946579f2",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "error_rate": 0.6,
+          "latency_ms": 55,
+          "rate_limited": 0
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "2d549d121a1d4093919d54f21a179ff5",
+      "source_type": "topology",
+      "source_name": "replay:topology",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "service_topology",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.400001,
+        "window_start": 1789540703.400001
+      },
+      "observed_at": 1789541003.400001,
+      "summary": "[{\"depends_on\":\"inventory-service\",\"service\":\"order-service\"}]",
+      "content_hash": "65b6ee7475d88d2978b38af26c599811c6e2550dc5247edb835a183f03b9dba5",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "depends_on": "inventory-service"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "49fca9d9a8614ac7900f3cb965ff29a5",
+      "source_type": "logs",
+      "source_name": "replay:logs",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_logs",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.4170196,
+        "window_start": 1789540703.4170196
+      },
+      "observed_at": 1789541003.4170196,
+      "summary": "[{\"message\":\"downstream inventory-service failed\",\"service\":\"order-service\",\"status\":502}]",
+      "content_hash": "ed0758313ceb6d7c0903e78281128e224beb57461a60ad396be1cb5b69c1fa75",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "status": 502,
+          "message": "downstream inventory-service failed"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "612a10e535c849bdac81ea32c01b1dd5",
+      "source_type": "traces",
+      "source_name": "replay:traces",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_traces",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.4999802,
+        "window_start": 1789540703.4999802
+      },
+      "observed_at": 1789541003.4999802,
+      "summary": "[{\"duration_ms\":55,\"error\":true,\"service\":\"inventory-service\",\"span\":\"read stock\"}]",
+      "content_hash": "068870ad29f28c47622962b343facf2dcd2e3bdec5fd71640ade4fa96419c5d1",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "span": "read stock",
+          "duration_ms": 55,
+          "error": true
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "a3dc3f896f97402a87547680ee04c112",
+      "source_type": "logs",
+      "source_name": "replay:logs",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_logs",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.4910083,
+        "window_start": 1789540703.4910083
+      },
+      "observed_at": 1789541003.4910083,
+      "summary": "[{\"message\":\"request failed with status 500\",\"service\":\"inventory-service\",\"status\":500}]",
+      "content_hash": "e4ff55af9bb35d7f07fdba7d6be0b14f7c0e2a8bd777b7122603b5390cee0252",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "status": 500,
+          "message": "request failed with status 500"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "aefe13e0a2e9487f87c2dd5bccb85851",
+      "source_type": "deploy",
+      "source_name": "replay:deploy",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "get_deploy_metadata",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.432992,
+        "window_start": 1789540703.432992
+      },
+      "observed_at": 1789541003.432992,
+      "summary": "[{\"deployed_at\":\"2026-09-16T04:55:00Z\",\"revision\":0,\"service\":\"order-service\",\"version\":\"v1\"}]",
+      "content_hash": "f7d25e780218dbd120d660567402cbf5919498e648cea65836e1fccf326cb482",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "version": "v1",
+          "revision": 0,
+          "deployed_at": "2026-09-16T04:55:00Z"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "b275aea780f145ff96fcb2c4e8bfe851",
+      "source_type": "metrics",
+      "source_name": "replay:metrics",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_metrics",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.4080074,
+        "window_start": 1789540703.4080074
+      },
+      "observed_at": 1789541003.4080074,
+      "summary": "[{\"error_rate\":0,\"latency_ms\":60,\"rate_limited\":0,\"service\":\"order-service\"}]",
+      "content_hash": "bcb8ca54fec8186d927bd0b594bf8d851ae46262eeb9eeb6d6fac1f3e4bec892",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "error_rate": 0,
+          "latency_ms": 60,
+          "rate_limited": 0
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "b9317b69590b41348a8b19a3d58f8ea4",
+      "source_type": "traces",
+      "source_name": "replay:traces",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_traces",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.4249856,
+        "window_start": 1789540703.4249856
+      },
+      "observed_at": 1789541003.4249856,
+      "summary": "[{\"dependency\":\"inventory-service\",\"duration_ms\":55,\"error\":true,\"service\":\"order-service\",\"span\":\"reserve inventory\"}]",
+      "content_hash": "28c837bfd42b430715868ccafdd1710b1e2375d69acc7b0fa1add5aa501f8728",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "span": "reserve inventory",
+          "dependency": "inventory-service",
+          "duration_ms": 55,
+          "error": true
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "bb7269d2fbf044559a1f471a37e705eb",
+      "source_type": "deploy",
+      "source_name": "replay:deploy",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "get_deploy_metadata",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.5079865,
+        "window_start": 1789540703.5079865
+      },
+      "observed_at": 1789541003.5079865,
+      "summary": "[{\"deployed_at\":\"2026-09-16T04:55:00Z\",\"revision\":0,\"service\":\"inventory-service\",\"version\":\"v1\"}]",
+      "content_hash": "a8877c45ea64a292a271f704bf1afb0bbe1930e6ad3786140f5aa8c09ac86185",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "version": "v1",
+          "revision": 0,
+          "deployed_at": "2026-09-16T04:55:00Z"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    }
+  ],
+  "ruled_out": [],
+  "remediation": [],
+  "confidence": 0.85,
+  "limitations": [
+    "Evidence links validate provenance and resource relevance, not semantic causality.",
+    "Replay fixtures are synthetic; fake-provider results do not measure real LLM intelligence."
+  ],
+  "provider": "fake-deterministic"
+}

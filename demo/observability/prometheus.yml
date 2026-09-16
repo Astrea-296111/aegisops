@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 2s
+scrape_configs:
+  - job_name: aegisops
+    static_configs:
+      - targets: ["api:8000", "order:8011", "inventory:8012"]
+

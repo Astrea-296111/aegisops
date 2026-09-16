@@ -1,0 +1,9 @@
+include README.md LICENSE THIRD_PARTY_NOTICES.md alembic.ini docker-compose.yml Dockerfile Makefile
+include requirements.txt requirements-dev.txt start-demo.cmd .env.example
+recursive-include migrations *.py *.mako
+recursive-include docs *.md *.html
+recursive-include scripts *.py *.ps1
+recursive-include demo *.yml
+recursive-include tests *.py
+recursive-include src/aegisops/data *.json
+

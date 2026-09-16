@@ -1,0 +1,305 @@
+{
+  "incident_id": "002d2e9dbeb549d98ff8fe665456ed56",
+  "run_id": "12b4f5c2c0474639a1f2292461577733",
+  "summary": "downstream_timeout",
+  "top_root_cause": {
+    "cause": "downstream_timeout",
+    "affected_service": "inventory-service",
+    "confidence": 0.85,
+    "evidence_ids": [
+      "0d609c597a124e10aaf0e5e2d97ee7b1",
+      "745495331e1e49569cb2a584e2c90a59",
+      "b9b3b4e163194359b919dd11b89eb26f",
+      "d88b1b3f14994b6a9b031cabeac77574"
+    ],
+    "reasoning_summary": "Correlate observed errors, latency and deployment metadata; synthetic rule-based diagnosis.",
+    "falsification_test": "Query the dependency directly; a healthy dependency would contradict this attribution."
+  },
+  "alternatives": [],
+  "evidence": [
+    {
+      "id": "0d609c597a124e10aaf0e5e2d97ee7b1",
+      "source_type": "traces",
+      "source_name": "replay:traces",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_traces",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541005.3830118,
+        "window_start": 1789540705.3830118
+      },
+      "observed_at": 1789541005.3830118,
+      "summary": "[{\"duration_ms\":1200,\"error\":true,\"service\":\"inventory-service\",\"span\":\"read stock\"}]",
+      "content_hash": "d01a9e99764d92758ff65c0162d45331f1563a762c992ee01b92dcaac4958897",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "span": "read stock",
+          "duration_ms": 1200,
+          "error": true
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "2856e8a792454176889880dff9814887",
+      "source_type": "deploy",
+      "source_name": "replay:deploy",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "get_deploy_metadata",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541005.3019822,
+        "window_start": 1789540705.3019822
+      },
+      "observed_at": 1789541005.3019822,
+      "summary": "[{\"deployed_at\":\"2026-09-16T04:55:00Z\",\"revision\":0,\"service\":\"order-service\",\"version\":\"v1\"}]",
+      "content_hash": "f7d25e780218dbd120d660567402cbf5919498e648cea65836e1fccf326cb482",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "version": "v1",
+          "revision": 0,
+          "deployed_at": "2026-09-16T04:55:00Z"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "530b25d2149f468399f20805a86c11f6",
+      "source_type": "metrics",
+      "source_name": "replay:metrics",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_metrics",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541005.2710028,
+        "window_start": 1789540705.2710028
+      },
+      "observed_at": 1789541005.2710028,
+      "summary": "[{\"error_rate\":0.32,\"latency_ms\":60,\"rate_limited\":0,\"service\":\"order-service\"}]",
+      "content_hash": "bd2123cd54803a123f2b2b9d6daec85d6149b2f022f0e3134d6c6b7263910f6d",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "error_rate": 0.32,
+          "latency_ms": 60,
+          "rate_limited": 0
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "5fd5e35caede4fce9258bb84880626fa",
+      "source_type": "logs",
+      "source_name": "replay:logs",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_logs",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541005.2809806,
+        "window_start": 1789540705.2809806
+      },
+      "observed_at": 1789541005.2809806,
+      "summary": "[{\"message\":\"downstream inventory-service failed\",\"service\":\"order-service\",\"status\":502}]",
+      "content_hash": "ed0758313ceb6d7c0903e78281128e224beb57461a60ad396be1cb5b69c1fa75",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "status": 502,
+          "message": "downstream inventory-service failed"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "745495331e1e49569cb2a584e2c90a59",
+      "source_type": "metrics",
+      "source_name": "replay:metrics",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_metrics",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541005.361004,
+        "window_start": 1789540705.361004
+      },
+      "observed_at": 1789541005.361004,
+      "summary": "[{\"error_rate\":0.6,\"latency_ms\":1200,\"rate_limited\":0,\"service\":\"inventory-service\"}]",
+      "content_hash": "5626af5613f54d6b40cebe4005663845da83b1c76a832a98c49aa4a117036fba",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "error_rate": 0.6,
+          "latency_ms": 1200,
+          "rate_limited": 0
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "9190af0b18424f3f9a0c052866058b3e",
+      "source_type": "traces",
+      "source_name": "replay:traces",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_traces",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541005.2920043,
+        "window_start": 1789540705.2920043
+      },
+      "observed_at": 1789541005.2920043,
+      "summary": "[{\"dependency\":\"inventory-service\",\"duration_ms\":1200,\"error\":true,\"service\":\"order-service\",\"span\":\"reserve inventory\"}]",
+      "content_hash": "d63ee0bcc4962d9c662e942ff30737f9956aa68a06ab734dafc81dd5c158de47",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "span": "reserve inventory",
+          "dependency": "inventory-service",
+          "duration_ms": 1200,
+          "error": true
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "b643f124d43d4b45a45de6f9e16553d4",
+      "source_type": "topology",
+      "source_name": "replay:topology",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "service_topology",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541005.2269876,
+        "window_start": 1789540705.2269876
+      },
+      "observed_at": 1789541005.2269876,
+      "summary": "[{\"depends_on\":\"inventory-service\",\"service\":\"order-service\"}]",
+      "content_hash": "65b6ee7475d88d2978b38af26c599811c6e2550dc5247edb835a183f03b9dba5",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "depends_on": "inventory-service"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "b9b3b4e163194359b919dd11b89eb26f",
+      "source_type": "deploy",
+      "source_name": "replay:deploy",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "get_deploy_metadata",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541005.3929896,
+        "window_start": 1789540705.3929896
+      },
+      "observed_at": 1789541005.3929896,
+      "summary": "[{\"deployed_at\":\"2026-09-16T04:55:00Z\",\"revision\":0,\"service\":\"inventory-service\",\"version\":\"v1\"}]",
+      "content_hash": "a8877c45ea64a292a271f704bf1afb0bbe1930e6ad3786140f5aa8c09ac86185",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "version": "v1",
+          "revision": 0,
+          "deployed_at": "2026-09-16T04:55:00Z"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "d88b1b3f14994b6a9b031cabeac77574",
+      "source_type": "logs",
+      "source_name": "replay:logs",
+      "query": {
+        "service": "inventory-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_logs",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541005.3719878,
+        "window_start": 1789540705.3719878
+      },
+      "observed_at": 1789541005.3719878,
+      "summary": "[{\"message\":\"timeout waiting for storage\",\"service\":\"inventory-service\",\"status\":500}]",
+      "content_hash": "9f4a64ce6e7516241efd839ccd162859fa387d57c1541cd2bdb6fb23945367ad",
+      "payload_excerpt": [
+        {
+          "service": "inventory-service",
+          "status": 500,
+          "message": "timeout waiting for storage"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    }
+  ],
+  "ruled_out": [],
+  "remediation": [],
+  "confidence": 0.85,
+  "limitations": [
+    "Evidence links validate provenance and resource relevance, not semantic causality.",
+    "Replay fixtures are synthetic; fake-provider results do not measure real LLM intelligence."
+  ],
+  "provider": "fake-deterministic"
+}

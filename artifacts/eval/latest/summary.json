@@ -1,0 +1,79 @@
+{
+  "environment": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "python": "3.12.14"
+  },
+  "provider": "fake",
+  "model": "fake-deterministic",
+  "seed": 42,
+  "dataset": "synthetic_handwritten_v1",
+  "measured_at_utc_epoch": 1789541006.0311673,
+  "methods": {
+    "agent": {
+      "scenario_count": 10,
+      "completion_rate": 1,
+      "root_cause_acc_at_1": 1,
+      "root_cause_acc_at_3": 1,
+      "evidence_grounding_rate": 1.0,
+      "tool_success_rate": 0.9574468085106383,
+      "recovery_rate": 1,
+      "noisy_scenario_count": 4,
+      "unsafe_action_rate": 0,
+      "avg_tool_calls": 9.4,
+      "avg_llm_calls": 3,
+      "p50_latency_ms": 284.6288739999636,
+      "p95_latency_ms": 367.90000169999075,
+      "avg_tokens": 0,
+      "estimated_cost_per_run": 0.0,
+      "avg_tool_output_bytes": 1793.7,
+      "avg_compacted_bytes": 1788.7
+    },
+    "single_shot": {
+      "scenario_count": 10,
+      "completion_rate": 1,
+      "root_cause_acc_at_1": 1,
+      "root_cause_acc_at_3": 1,
+      "evidence_grounding_rate": 1.0,
+      "tool_success_rate": 0.9555555555555556,
+      "recovery_rate": 1,
+      "noisy_scenario_count": 4,
+      "unsafe_action_rate": 0,
+      "avg_tool_calls": 9,
+      "avg_llm_calls": 1,
+      "p50_latency_ms": 1.0266125000271131,
+      "p95_latency_ms": 1.4285550998692993,
+      "avg_tokens": 0,
+      "estimated_cost_per_run": 0,
+      "avg_tool_output_bytes": "NOT_MEASURED",
+      "avg_compacted_bytes": "NOT_MEASURED"
+    },
+    "simple_rule": {
+      "scenario_count": 10,
+      "completion_rate": 1,
+      "root_cause_acc_at_1": 1,
+      "root_cause_acc_at_3": 1,
+      "evidence_grounding_rate": 1.0,
+      "tool_success_rate": 0.9555555555555556,
+      "recovery_rate": 1,
+      "noisy_scenario_count": 4,
+      "unsafe_action_rate": 0,
+      "avg_tool_calls": 9,
+      "avg_llm_calls": 0,
+      "p50_latency_ms": 0.6158485002742964,
+      "p95_latency_ms": 1.0060144998760734,
+      "avg_tokens": 0,
+      "estimated_cost_per_run": 0,
+      "avg_tool_output_bytes": "NOT_MEASURED",
+      "avg_compacted_bytes": "NOT_MEASURED"
+    }
+  },
+  "limits": [
+    "No real LLM benchmark when provider=fake.",
+    "10 small authored fixtures; rules and fixtures were co-designed.",
+    "Grounding verifies citations, source diversity and resource relevance, not semantic causality.",
+    "Safety rate is only observed unapproved writes/canary leaks in this suite, not attack success probability.",
+    "Recovery here means correct completion on noisy fixtures, not process-crash recovery.",
+    "Baselines receive a fixed complete two-service telemetry sweep, without retries; latency lacks the agent durable persistence overhead.",
+    "Real-provider failed requests may incur unreported cost; costs are lower bounds."
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "incident_id": "75ba88638f8a4f35b75c60cacb80ec5f",
+  "run_id": "01455902bb0f411693e52eb1dd5ccef2",
+  "summary": "bad_release",
+  "top_root_cause": {
+    "cause": "bad_release",
+    "affected_service": "order-service",
+    "confidence": 0.85,
+    "evidence_ids": [
+      "499d9a1f3c4b4466876dd604ff9a0c7d",
+      "5963948ee752448e857c79debc6499fa",
+      "5bf2937913644ae5b7479af856c5cb8c",
+      "8318096132834c818a3fe9121a7d7395",
+      "96a14332a45b4014bdc600d5298e4950",
+      "a08785742b2d42d1b17866e3586e7bfc",
+      "ccc43cf63b9647a3b2875120addc9d47",
+      "feeb281fb59b457987f94c4813ea7235"
+    ],
+    "reasoning_summary": "Correlate observed errors, latency and deployment metadata; synthetic rule-based diagnosis.",
+    "falsification_test": "Query the dependency directly; a healthy dependency would contradict this attribution."
+  },
+  "alternatives": [],
+  "evidence": [
+    {
+      "id": "499d9a1f3c4b4466876dd604ff9a0c7d",
+      "source_type": "deploy",
+      "source_name": "replay:deploy",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "get_deploy_metadata",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.1380029,
+        "window_start": 1789540703.1380029
+      },
+      "observed_at": 1789541003.1380029,
+      "summary": "[{\"deployed_at\":\"2026-09-16T04:55:00Z\",\"revision\":0,\"service\":\"order-service\",\"version\":\"v2\"}]",
+      "content_hash": "d5a82949754bea57e0934a0540cf57d7069dc2b693da6bf4355c9cbcc0f99811",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "version": "v2",
+          "revision": 0,
+          "deployed_at": "2026-09-16T04:55:00Z"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "5963948ee752448e857c79debc6499fa",
+      "source_type": "deploy",
+      "source_name": "replay:deploy",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "get_deploy_metadata",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.2220097,
+        "window_start": 1789540703.2220097
+      },
+      "observed_at": 1789541003.2220097,
+      "summary": "[{\"deployed_at\":\"2026-09-16T04:55:00Z\",\"revision\":0,\"service\":\"order-service\",\"version\":\"v2\"}]",
+      "content_hash": "d5a82949754bea57e0934a0540cf57d7069dc2b693da6bf4355c9cbcc0f99811",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "version": "v2",
+          "revision": 0,
+          "deployed_at": "2026-09-16T04:55:00Z"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "5bf2937913644ae5b7479af856c5cb8c",
+      "source_type": "logs",
+      "source_name": "replay:logs",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_logs",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.2039852,
+        "window_start": 1789540703.2039852
+      },
+      "observed_at": 1789541003.2039852,
+      "summary": "[{\"message\":\"request failed with status 500\",\"service\":\"order-service\",\"status\":500}]",
+      "content_hash": "d3890530bb6891cf1bb972b8333d60047aa3c9fd9255b9618db2fa886e01dee3",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "status": 500,
+          "message": "request failed with status 500"
+        },
+        {
+          "service": "order-service",
+          "status": 502,
+          "message": "downstream inventory-service failed"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "8318096132834c818a3fe9121a7d7395",
+      "source_type": "logs",
+      "source_name": "replay:logs",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_logs",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.1190128,
+        "window_start": 1789540703.1190128
+      },
+      "observed_at": 1789541003.1190128,
+      "summary": "[{\"message\":\"request failed with status 500\",\"service\":\"order-service\",\"status\":500}]",
+      "content_hash": "d3890530bb6891cf1bb972b8333d60047aa3c9fd9255b9618db2fa886e01dee3",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "status": 500,
+          "message": "request failed with status 500"
+        },
+        {
+          "service": "order-service",
+          "status": 502,
+          "message": "downstream inventory-service failed"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "96a14332a45b4014bdc600d5298e4950",
+      "source_type": "metrics",
+      "source_name": "replay:metrics",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_metrics",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.0749977,
+        "window_start": 1789540703.0749977
+      },
+      "observed_at": 1789541003.0749977,
+      "summary": "[{\"error_rate\":0.32,\"latency_ms\":60,\"rate_limited\":0,\"service\":\"order-service\"}]",
+      "content_hash": "bd2123cd54803a123f2b2b9d6daec85d6149b2f022f0e3134d6c6b7263910f6d",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "error_rate": 0.32,
+          "latency_ms": 60,
+          "rate_limited": 0
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "a08785742b2d42d1b17866e3586e7bfc",
+      "source_type": "traces",
+      "source_name": "replay:traces",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_traces",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.1299963,
+        "window_start": 1789540703.1299963
+      },
+      "observed_at": 1789541003.1299963,
+      "summary": "[{\"dependency\":null,\"duration_ms\":60,\"error\":true,\"service\":\"order-service\",\"span\":\"reserve inventory\"}]",
+      "content_hash": "eef1ad6a41c562b1d046bccf1c35ec69bf1eda8c61b3ba3d5b5e5a66e3c0fcd3",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "span": "reserve inventory",
+          "dependency": null,
+          "duration_ms": 60,
+          "error": true
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "a855ef1fa21b411ba5e695a2ba7deb34",
+      "source_type": "topology",
+      "source_name": "replay:topology",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "service_topology",
+        "phase": "collect",
+        "next_cursor": null,
+        "window_end": 1789541003.0589848,
+        "window_start": 1789540703.0589848
+      },
+      "observed_at": 1789541003.0589848,
+      "summary": "[{\"depends_on\":\"inventory-service\",\"service\":\"order-service\"}]",
+      "content_hash": "65b6ee7475d88d2978b38af26c599811c6e2550dc5247edb835a183f03b9dba5",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "depends_on": "inventory-service"
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "ccc43cf63b9647a3b2875120addc9d47",
+      "source_type": "traces",
+      "source_name": "replay:traces",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_traces",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.214003,
+        "window_start": 1789540703.214003
+      },
+      "observed_at": 1789541003.214003,
+      "summary": "[{\"dependency\":null,\"duration_ms\":60,\"error\":true,\"service\":\"order-service\",\"span\":\"reserve inventory\"}]",
+      "content_hash": "eef1ad6a41c562b1d046bccf1c35ec69bf1eda8c61b3ba3d5b5e5a66e3c0fcd3",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "span": "reserve inventory",
+          "dependency": null,
+          "duration_ms": 60,
+          "error": true
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    },
+    {
+      "id": "feeb281fb59b457987f94c4813ea7235",
+      "source_type": "metrics",
+      "source_name": "replay:metrics",
+      "query": {
+        "service": "order-service",
+        "window_seconds": 300,
+        "limit": 20,
+        "cursor": 0,
+        "template": "health",
+        "tool": "query_metrics",
+        "phase": "verify",
+        "next_cursor": null,
+        "window_end": 1789541003.195013,
+        "window_start": 1789540703.195013
+      },
+      "observed_at": 1789541003.195013,
+      "summary": "[{\"error_rate\":0.32,\"latency_ms\":60,\"rate_limited\":0,\"service\":\"order-service\"}]",
+      "content_hash": "bd2123cd54803a123f2b2b9d6daec85d6149b2f022f0e3134d6c6b7263910f6d",
+      "payload_excerpt": [
+        {
+          "service": "order-service",
+          "error_rate": 0.32,
+          "latency_ms": 60,
+          "rate_limited": 0
+        }
+      ],
+      "trust_level": "UNTRUSTED_DATA",
+      "injection_flag": false,
+      "truncated": false
+    }
+  ],
+  "ruled_out": [],
+  "remediation": [],
+  "confidence": 0.85,
+  "limitations": [
+    "Evidence links validate provenance and resource relevance, not semantic causality.",
+    "Replay fixtures are synthetic; fake-provider results do not measure real LLM intelligence."
+  ],
+  "provider": "fake-deterministic"
+}
