@@ -1,12 +1,11 @@
 # AegisOps
 
-**一个可恢复、带证据引用和人工审批的 Python 故障排查 Agent，面向后端／安全岗位学习。**
+**一个可恢复、带证据引用和人工审批的 Python 故障排查 Agent**
 
 它接收故障告警，查询指标、日志、链路，形成结构化根因报告。状态保存在数据库里；模型只有提出调查与修复建议的能力，授权和执行由普通代码控制。
 
-## Windows：先跑起来
+## 先跑起来
 
-推荐 **Windows 10/11、x64、Python 3.12**。原生回放模式不需要 Docker、WSL、Make 或 API Key。
 
 1. 安装 [Python 3.12](https://www.python.org/downloads/windows/)，安装时勾选 Python Launcher 和 Add Python to PATH。
 2. 将工程完整解压到 `C:\Projects\aegisops`。不要直接在 ZIP 内运行。
@@ -31,7 +30,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\windows.ps1 demo
 - viewer/operator 权限、精确动作哈希审批、资源版本前置条件、事务内幂等修复。
 - 审计哈希链与 10 个可复现的 clean/noisy/adversarial 场景。
 
-采用自定义、小规模编排，便于看清后端一致性边界。没有依赖 LangGraph、CrewAI 或多角色 Agent。Fake Provider 是公开规则实现的测试替身，不能把它包装成大模型效果。
+采用自定义、小规模编排，便于看清后端一致性边界。没有依赖 LangGraph、CrewAI 或多角色 Agent。Fake Provider 是公开规则实现的测试替身。
 
 ## 架构
 
@@ -133,7 +132,7 @@ AEGIS_LLM_API_KEY=your-key
 
 这里的 `openai` 指 Chat Completions 兼容协议，使用 httpx，不依赖厂商 SDK。服务端必须支持 JSON mode、`max_tokens`、`temperature` 和 usage 字段；不保证兼容所有推理模型或 Responses-only 接口。默认 API 地址只是配置值，不能在没有凭据时直接调用。启用真实模型会把脱敏遥测发送到你配置的供应商；测试仅验证 HTTP 协议模拟响应，未调用付费模型。
 
-## 取舍、限制和简历
+## 取舍、限制
 
 - 为 Windows 增加原生 SQLite 路线，同时保留 prompt 要求的 PostgreSQL。
 - 写操作缩减为两个同数据库内的演示动作，未提供任意外部修复执行器。
@@ -142,7 +141,6 @@ AEGIS_LLM_API_KEY=your-key
 - OTel 每次状态处理生成 span，通过 run.id 关联；不是一个跨进程持续打开的长 trace。
 - 数据集小、人工合成、和 Fake 规则共同设计，评测主要证明回归可复现。
 
-简历只使用 [真实可写版本](docs/resume.md)。三个重点是 durable runtime、可校验的修复授权、故障／安全回归，而不是“套用了多少框架”。下一步应收集新故障、接真实模型、扩展反例和 Windows／Docker 实测记录。
 
 ## 参考项目
 
